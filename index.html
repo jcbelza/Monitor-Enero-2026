@@ -60,18 +60,20 @@
             transition: all 0.3s ease-in-out;
         }
         
+        /* Navigation Styles */
         .active-tab {
             border-bottom: 2px solid #0f766e; /* Teal 700 */
             color: #0f766e;
             font-weight: 600;
         }
 
-        /* Estilos para Navegación Móvil */
-        .mobile-active-tab {
-            border-left: 4px solid #0f766e; /* Teal 700 */
-            background-color: #f0fdfa; /* Teal 50 */
-            color: #0f766e;
-            font-weight: 600;
+        /* Hide scrollbar for cleaner mobile nav */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
     </style>
 
@@ -104,8 +106,9 @@
     <!-- Navigation -->
     <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm backdrop-blur-md bg-opacity-90">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center sm:h-16">
+                <!-- Logo Section -->
+                <div class="flex items-center py-3 sm:py-0 w-full sm:w-auto">
                     <div class="flex-shrink-0 flex items-center gap-3">
                         
                         <!-- SECCIÓN LOGO: Soporta imagen 'Logo.png' o muestra icono por defecto -->
@@ -127,44 +130,21 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Menu (Hidden on Mobile) -->
-                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="active-tab inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-teal-300">
-                        Tablero Ejecutivo
-                    </button>
-                    <button onclick="switchTab('regional')" id="nav-regional" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-teal-300 hover:text-gray-700">
-                        Pulso Regional
-                    </button>
-                    <button onclick="switchTab('strategy')" id="nav-strategy" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-teal-300 hover:text-gray-700">
-                        Integración Tendencias y Riesgos
-                    </button>
+                <!-- Navigation Links - Always Visible -->
+                <!-- Mobile: Horizontal scroll / Desktop: Flex Row -->
+                <div class="w-full sm:w-auto overflow-x-auto no-scrollbar border-t sm:border-t-0 border-slate-100">
+                    <div class="flex space-x-6 sm:space-x-8 px-1 pb-1 sm:pb-0">
+                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="active-tab whitespace-nowrap inline-flex items-center px-1 pt-3 sm:pt-1 pb-2 text-sm font-medium border-b-2 transition-colors hover:border-teal-300">
+                            Tablero Ejecutivo
+                        </button>
+                        <button onclick="switchTab('regional')" id="nav-regional" class="whitespace-nowrap inline-flex items-center px-1 pt-3 sm:pt-1 pb-2 text-sm font-medium text-gray-500 border-b-2 border-transparent transition-colors hover:border-teal-300 hover:text-gray-700">
+                            Pulso Regional
+                        </button>
+                        <button onclick="switchTab('strategy')" id="nav-strategy" class="whitespace-nowrap inline-flex items-center px-1 pt-3 sm:pt-1 pb-2 text-sm font-medium text-gray-500 border-b-2 border-transparent transition-colors hover:border-teal-300 hover:text-gray-700">
+                            Integración y Riesgos
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Mobile Menu Button (Visible only on Mobile) -->
-                <div class="-mr-2 flex items-center sm:hidden">
-                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Abrir menú</span>
-                        <!-- Icono Menu Hamburger -->
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Panel (Hidden by default, toggled by JS) -->
-        <div class="hidden sm:hidden bg-white border-t border-slate-200" id="mobile-menu">
-            <div class="pt-2 pb-3 space-y-1">
-                <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="mobile-active-tab block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
-                    Tablero Ejecutivo
-                </button>
-                <button onclick="switchTab('regional')" id="mobile-nav-regional" class="border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
-                    Pulso Regional
-                </button>
-                <button onclick="switchTab('strategy')" id="mobile-nav-strategy" class="border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
-                    Integración Tendencias y Riesgos
-                </button>
             </div>
         </div>
     </nav>
@@ -733,54 +713,21 @@
 
         // --- INTERACTION LOGIC ---
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
+        // Simplified switchTab for single nav structure
         function switchTab(tabId) {
-            const tabs = ['dashboard', 'regional', 'strategy'];
-            
-            // 1. Reset/Hide All
-            tabs.forEach(id => {
-                // Hide Views
+            // Hide all views
+            ['dashboard', 'regional', 'strategy'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
-                
-                // Deactivate Desktop Nav
-                const desktopNav = document.getElementById(`nav-${id}`);
-                if (desktopNav) {
-                    desktopNav.classList.remove('active-tab', 'text-gray-900');
-                    desktopNav.classList.add('text-gray-500');
-                }
-
-                // Deactivate Mobile Nav
-                const mobileNav = document.getElementById(`mobile-nav-${id}`);
-                if (mobileNav) {
-                    mobileNav.classList.remove('mobile-active-tab');
-                    mobileNav.classList.add('border-transparent', 'text-slate-600');
-                }
+                const navBtn = document.getElementById(`nav-${id}`);
+                navBtn.classList.remove('active-tab', 'text-gray-900');
+                navBtn.classList.add('text-gray-500', 'border-transparent');
             });
 
-            // 2. Activate Selected
-            // Show View
+            // Show selected view
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
-
-            // Activate Desktop Nav
-            const activeDesktop = document.getElementById(`nav-${tabId}`);
-            if (activeDesktop) {
-                activeDesktop.classList.add('active-tab', 'text-gray-900');
-                activeDesktop.classList.remove('text-gray-500');
-            }
-
-            // Activate Mobile Nav
-            const activeMobile = document.getElementById(`mobile-nav-${tabId}`);
-            if (activeMobile) {
-                activeMobile.classList.add('mobile-active-tab');
-                activeMobile.classList.remove('border-transparent', 'text-slate-600');
-            }
-
-            // 3. Close Mobile Menu (if open)
-            document.getElementById('mobile-menu').classList.add('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            activeBtn.classList.add('active-tab', 'text-gray-900');
+            activeBtn.classList.remove('text-gray-500', 'border-transparent');
         }
 
         function renderCountryCards(filter = 'all') {
