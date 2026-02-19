@@ -94,15 +94,27 @@
 <body class="antialiased selection:bg-teal-100 selection:text-teal-900">
 
     <!-- Navigation -->
-    
     <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm backdrop-blur-md bg-opacity-90">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-teal-700 rounded-lg flex items-center justify-center text-white font-bold">C</div>
-                        <!-- LOGO - POSICIONADO ABSOLUTO -->
-                          <img src="Logo.png" alt="Logo CIER" class="absolute left-1/2 -translate-x-1/2 top-[-60px] w-[150px] z-20"> 
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        
+                        <!-- SECCIÓN LOGO: Soporta imagen 'Logo.png' o muestra icono por defecto -->
+                        <div class="relative flex items-center">
+                            <!-- Intenta cargar Logo.png. Si falla (onerror), oculta la imagen y muestra el fallback -->
+                            <img src="Logo.png" 
+                                 alt="Logo CIER" 
+                                 class="h-10 w-auto object-contain" 
+                                 onerror="this.style.display='none'; document.getElementById('fallback-logo').classList.remove('hidden'); document.getElementById('fallback-logo').classList.add('flex');">
+                            
+                            <!-- Icono de Respaldo (Visible solo si falla la imagen) -->
+                            <div id="fallback-logo" class="w-9 h-9 bg-teal-700 rounded-lg hidden items-center justify-center text-white font-bold shadow-sm">
+                                C
+                            </div>
+                        </div>
+                        <!-- FIN SECCIÓN LOGO -->
+
                         <span class="font-bold text-slate-800 text-lg tracking-tight">CIER <span class="text-slate-500 font-normal">| Monitor Enero 2026</span></span>
                     </div>
                 </div>
@@ -135,11 +147,10 @@
 
         <!-- VIEW 1: DASHBOARD (Summary & Stats) -->
         <div id="view-dashboard" class="space-y-8 animate-fade-in block">
-           
+            
             <!-- Executive Summary Cards -->
             <section>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                 
                     <!-- Card 1 -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 card-hover transition-all-300 relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-16 h-16 bg-amber-100 rounded-bl-full -mr-8 -mt-8"></div>
@@ -769,12 +780,4 @@
 
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
