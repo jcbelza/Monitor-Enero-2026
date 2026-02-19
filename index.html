@@ -65,6 +65,14 @@
             color: #0f766e;
             font-weight: 600;
         }
+
+        /* Estilos para Navegación Móvil */
+        .mobile-active-tab {
+            border-left: 4px solid #0f766e; /* Teal 700 */
+            background-color: #f0fdfa; /* Teal 50 */
+            color: #0f766e;
+            font-weight: 600;
+        }
     </style>
 
     <!-- 
@@ -118,6 +126,8 @@
                         <span class="font-bold text-slate-800 text-lg tracking-tight">CIER <span class="text-slate-500 font-normal">| Monitor Enero 2026</span></span>
                     </div>
                 </div>
+                
+                <!-- Desktop Menu (Hidden on Mobile) -->
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="active-tab inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-teal-300">
                         Tablero Ejecutivo
@@ -129,6 +139,32 @@
                         Integración Tendencias y Riesgos
                     </button>
                 </div>
+
+                <!-- Mobile Menu Button (Visible only on Mobile) -->
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Abrir menú</span>
+                        <!-- Icono Menu Hamburger -->
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel (Hidden by default, toggled by JS) -->
+        <div class="hidden sm:hidden bg-white border-t border-slate-200" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="mobile-active-tab block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
+                    Tablero Ejecutivo
+                </button>
+                <button onclick="switchTab('regional')" id="mobile-nav-regional" class="border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
+                    Pulso Regional
+                </button>
+                <button onclick="switchTab('strategy')" id="mobile-nav-strategy" class="border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left transition-colors">
+                    Integración Tendencias y Riesgos
+                </button>
             </div>
         </div>
     </nav>
@@ -697,18 +733,54 @@
 
         // --- INTERACTION LOGIC ---
 
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
         function switchTab(tabId) {
-            // Hide all views
-            ['dashboard', 'regional', 'strategy'].forEach(id => {
+            const tabs = ['dashboard', 'regional', 'strategy'];
+            
+            // 1. Reset/Hide All
+            tabs.forEach(id => {
+                // Hide Views
                 document.getElementById(`view-${id}`).classList.add('hidden');
-                document.getElementById(`nav-${id}`).classList.remove('active-tab', 'text-gray-900');
-                document.getElementById(`nav-${id}`).classList.add('text-gray-500');
+                
+                // Deactivate Desktop Nav
+                const desktopNav = document.getElementById(`nav-${id}`);
+                if (desktopNav) {
+                    desktopNav.classList.remove('active-tab', 'text-gray-900');
+                    desktopNav.classList.add('text-gray-500');
+                }
+
+                // Deactivate Mobile Nav
+                const mobileNav = document.getElementById(`mobile-nav-${id}`);
+                if (mobileNav) {
+                    mobileNav.classList.remove('mobile-active-tab');
+                    mobileNav.classList.add('border-transparent', 'text-slate-600');
+                }
             });
 
-            // Show selected view
+            // 2. Activate Selected
+            // Show View
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
-            document.getElementById(`nav-${tabId}`).classList.add('active-tab', 'text-gray-900');
-            document.getElementById(`nav-${tabId}`).classList.remove('text-gray-500');
+
+            // Activate Desktop Nav
+            const activeDesktop = document.getElementById(`nav-${tabId}`);
+            if (activeDesktop) {
+                activeDesktop.classList.add('active-tab', 'text-gray-900');
+                activeDesktop.classList.remove('text-gray-500');
+            }
+
+            // Activate Mobile Nav
+            const activeMobile = document.getElementById(`mobile-nav-${tabId}`);
+            if (activeMobile) {
+                activeMobile.classList.add('mobile-active-tab');
+                activeMobile.classList.remove('border-transparent', 'text-slate-600');
+            }
+
+            // 3. Close Mobile Menu (if open)
+            document.getElementById('mobile-menu').classList.add('hidden');
         }
 
         function renderCountryCards(filter = 'all') {
